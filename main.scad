@@ -27,10 +27,15 @@ use <./harmonica-body.scad>
 include <./box-inset.scad>
 include <./dimensions.scad>
 
-color("white")
+color("white") {
   translate([32, 0, 0])
   for (i=[0:5]) {
     translate([0, i * ($thick_gap + $material_thickness), 0])
       harmonicaBody();
   }
-
+  translate([$height_gap/(tan(90-$slant_angle)) + 8, 0, $height_gap + $material_thickness])
+  for (i=[0:5]) {
+    translate([0, i * ($thick_gap + $material_thickness), 0])
+      harmonicaBody();
+  }
+}
