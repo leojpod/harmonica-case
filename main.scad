@@ -21,21 +21,38 @@
  *
  * harmonica stored along the X axis
  */
+include <./dimensions.scad>
 
 use <./harmonica-body.scad>
 
-include <./box-inset.scad>
-include <./dimensions.scad>
+use <./box-inset.scad>
+use <./box-outset.scad>
+use <./lid.scad>
 
-color("white") {
-  translate([32, 0, 0])
-  for (i=[0:5]) {
-    translate([0, i * ($thick_gap + $material_thickness), 0])
-      harmonicaBody();
+rotate([0, -17, 0]) {
+  translate([$material_thickness, $material_thickness, $material_thickness]) {
+    boxInset();
+    color("white") {
+      translate([32, 0, 0])
+      for (i=[0:5]) {
+        translate([0, i * ($thick_gap + $material_thickness), 0])
+          harmonicaBody();
+      }
+      translate([$height_gap/(tan(90-$slant_angle)) + 8, 0, $height_gap + $material_thickness])
+      for (i=[0:5]) {
+        translate([0, i * ($thick_gap + $material_thickness), 0])
+          harmonicaBody();
+      }
+    }
   }
-  translate([$height_gap/(tan(90-$slant_angle)) + 8, 0, $height_gap + $material_thickness])
-  for (i=[0:5]) {
-    translate([0, i * ($thick_gap + $material_thickness), 0])
-      harmonicaBody();
-  }
+
+  /* boxOutset(); */
+  translate([$insideHeight + $outsetMargin, 0, 0])
+  lid();
+  translate([$insideHeight + $outsetMargin, 0, 0])
+  rotate([0, 180, 0])
+  standLid();
+  translate([$insideHeight + $outsetMargin, 0, 1.5 * (2 * $height_gap + 3 * $material_thickness)])
+  rotate([0, 180, 0])
+  otherLid();
 }

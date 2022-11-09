@@ -1,6 +1,6 @@
 include <./dimensions.scad>
 
-// inside-slant offset -> 
+// inside-slant offset ->
 offset = 8 + ($height_gap + $material_thickness) / tan (90-$slant_angle);
 margin = 5;
 
@@ -89,7 +89,7 @@ module verticalSeparator(height, front_knotch = true) {
   }
 }
 
-module boxInset(height = 110) {
+module boxInset(height = $insideHeight) {
   translate([offset, 0, 30])
     horizontalPlank(height);
 
@@ -117,4 +117,5 @@ module boxInset(height = 110) {
   translate([0, 4 * $thick_gap + 3 * $material_thickness, 0])
     verticalSeparator(height);
 }
+
 boxInset();
