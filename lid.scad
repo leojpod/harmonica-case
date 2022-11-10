@@ -67,31 +67,77 @@ module roundedSide() {
       rotate([90, 0, 90])
       crenel(10, w);
 
+    crenel(3, $material_thickness);
+
+    translate([0, width, $material_thickness])
+    rotate([180, 0, 0])
+      crenel(3, $material_thickness);
+  }
+}
+
+module roundedSideFlatten() {
+  w = round(width / 20);
+  flattenLength = PI * .5 * (circularRadius - $material_thickness);
+
+  difference() {
+    cube([flatHeight + flattenLength, width, $material_thickness]);
+
+    translate([flatHeight + flattenLength, + w + (width - w * 20) / 2, 0])
+      rotate([0, 0, 90])
+      crenel(10, w);
+
+    crenel(3, $material_thickness);
+
+    translate([0, width, $material_thickness])
+    rotate([180, 0, 0])
+      crenel(3, $material_thickness);
+  }
+}
+
+module roundedSide() {
+  w = round(width / 20);
+  difference() {
+    union() {
+      cube([flatHeight, width, $material_thickness]);
+
+      translate([flatHeight, 0, 0])
+        roundedTop();
+    }
+    translate([flatHeight + circularRadius - $material_thickness, + w + (width - w * 20) / 2, circularRadius - margin])
+      rotate([90, 0, 90])
+      crenel(10, w);
+
+    crenel(3, $material_thickness);
+
+    translate([0, width, $material_thickness])
+    rotate([180, 0, 0])
+      crenel(3, $material_thickness);
   }
 }
 
 module standSide() {
-  union() {
-    cube([flatHeight, $material_thickness, circularRadius]);
+  difference() {
+    union() {
+      cube([flatHeight, $material_thickness, circularRadius]);
 
-    translate([flatHeight, 0, circularRadius])
-      roundedCorner(circularRadius - $material_thickness);
+      translate([flatHeight, 0, circularRadius])
+        roundedCorner(circularRadius - $material_thickness);
 
-    difference() {
-      translate([0, 0, circularRadius])
-        cube([flatHeight + circularRadius, $material_thickness, lidDepth - circularRadius]);
+      difference() {
+        translate([0, 0, circularRadius])
+          cube([flatHeight + circularRadius, $material_thickness, lidDepth - circularRadius]);
 
-      translate([0, -margin, lidDepth])
-        rotate([0,  atan((lidDepth - circularRadius) / (flatHeight + circularRadius)), 0])
-        cube([width / 2, $material_thickness + 2 * margin, width / 2]);
-
-      translate([flatHeight + circularRadius - $material_thickness - 10, - 10 + $material_thickness / 2, circularRadius - $material_thickness])
-        cube([5, 20, $material_thickness]);
-
-      translate([$material_thickness, $material_thickness, 0])
-        rotate([90,0,0])
-        crenel(2, $material_thickness);
+        translate([0, -margin, lidDepth])
+          rotate([0,  atan((lidDepth - circularRadius) / (flatHeight + circularRadius)), 0])
+          cube([width / 2, $material_thickness + 2 * margin, width / 2]);
+      }
     }
+    translate([$material_thickness, $material_thickness, 0])
+      rotate([90,0,0])
+      crenel(2, $material_thickness);
+
+    translate([flatHeight + circularRadius - $material_thickness - 10, - 10 + $material_thickness / 2, circularRadius - $material_thickness])
+      cube([5, 20, $material_thickness]);
   }
 }
 
@@ -194,6 +240,45 @@ module otherRoundedCorner() {
   }
 }
 
+module otherRoundedCornerFlatten() {
+  flattenLength = PI * .5 * (circularRadius - $material_thickness);
+
+  translate([0, 0, -lidDepth + $material_thickness])
+  union() {
+    difference() {
+      translate([0, 0, lidDepth - $material_thickness])
+        cube([flatHeight + flattenLength, width, $material_thickness]);
+
+      translate([$material_thickness,0, lidDepth - $material_thickness])
+        rotate([0, 0, 0])
+        crenel(2, $material_thickness);
+
+      translate([$material_thickness,width, lidDepth ])
+        rotate([180, 0, 0])
+        crenel(2, $material_thickness);
+    }
+
+    translate([(lidDepth - circularRadius) + flattenLength + flatHeight, 0, lidDepth * 2 + $material_thickness])
+    rotate([0, 90, 0])
+    difference() {
+      translate([flatHeight + circularRadius - $material_thickness, 0, - lidDepth + circularRadius])
+        rotate([0, 0, 0])
+        cube([$material_thickness, width, (lidDepth - circularRadius) * 2]);
+
+      translate([flatHeight + circularRadius - $material_thickness, 0, lidDepth - circularRadius - $material_thickness / 2])
+        rotate([0, 90, 0])
+        crenel(3, $material_thickness);
+
+      translate([flatHeight + circularRadius - $material_thickness, width - $material_thickness + margin, lidDepth - circularRadius - $material_thickness / 2])
+        rotate([0, 90, 0])
+        crenel(3, $material_thickness);
+    }
+
+    translate([flatHeight + flattenLength - 4, 0, lidDepth - $material_thickness])
+    cube([5, width, $material_thickness]);
+  }
+}
+
 module otherLid() {
   color("white")
     otherSide();
@@ -202,8 +287,8 @@ module otherLid() {
     color("red")
     otherSide();
 
-  /* color("green") */
-    /* otherRoundedCorner(); */
+  color("green")
+    otherRoundedCorner();
 }
 
 module lid() {
@@ -216,4 +301,4 @@ module lid() {
 
 
 
-standLid();
+lid();
