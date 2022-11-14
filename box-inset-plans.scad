@@ -5,6 +5,7 @@ use <./box-inset.scad>
 
 margin = 5;
 insideWidth = 6 * $thick_gap + 5 * $material_thickness;
+echo("insideWidth: ", insideWidth);
 
 // Outside box
 
@@ -20,9 +21,9 @@ module insideBoxLayout() {
   verticalSeparator($insideHeight, false);
 
 
-  translate([-10, 0, 0])
-  rotate([0, -90, 0])
-  insideSlant($insideHeight);
+  translate([$insideHeight, 0, $material_thickness])
+  rotate([0, 90, 0])
+  insideSlant();
 }
 
 projection(cut = true) {

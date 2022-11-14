@@ -2,7 +2,7 @@ include <./dimensions.scad>
 use <./crenel.scad>
 
 lidDepth = $height_gap + 3 * $material_thickness / 2;
-width = $thick_gap * 6 + 7 * $material_thickness;
+width = $thick_gap * $horizontalPlacements + ($horizontalPlacements + 1) * $material_thickness;
 margin = 2;
 flatHeight = 20;
 
@@ -54,29 +54,8 @@ module roundedTop() {
     }
 }
 
-module roundedSide() {
-  w = round(width / 20);
-  difference() {
-    union() {
-      cube([flatHeight, width, $material_thickness]);
-
-      translate([flatHeight, 0, 0])
-        roundedTop();
-    }
-    translate([flatHeight + circularRadius - $material_thickness, + w + (width - w * 20) / 2, circularRadius - margin])
-      rotate([90, 0, 90])
-      crenel(10, w);
-
-    crenel(3, $material_thickness);
-
-    translate([0, width, $material_thickness])
-    rotate([180, 0, 0])
-      crenel(3, $material_thickness);
-  }
-}
-
 module roundedSideFlatten() {
-  w = round(width / 20);
+  w = round(width * 0.05);
   flattenLength = PI * .5 * (circularRadius - $material_thickness);
 
   difference() {
@@ -95,7 +74,8 @@ module roundedSideFlatten() {
 }
 
 module roundedSide() {
-  w = round(width / 20);
+  w = round(width * 0.05);
+  crenelOffset = round((width - w * 20) / 2);
   difference() {
     union() {
       cube([flatHeight, width, $material_thickness]);
@@ -103,7 +83,7 @@ module roundedSide() {
       translate([flatHeight, 0, 0])
         roundedTop();
     }
-    translate([flatHeight + circularRadius - $material_thickness, + w + (width - w * 20) / 2, circularRadius - margin])
+    translate([flatHeight + circularRadius - $material_thickness, $material_thickness + w, circularRadius - margin])
       rotate([90, 0, 90])
       crenel(10, w);
 
@@ -156,14 +136,14 @@ module stabiliser() {
 
     translate([10 + $material_thickness, 0, 0])
       rotate([0, 0, 90])
-      crenel(11, w);
+      crenel(10, w);
   }
 }
 
 module standLid() {
   standSide();
 
-  translate([0, $thick_gap * 6 + $material_thickness * 6, 0])
+  translate([0, width - $material_thickness, 0])
     standSide();
 
   roundedSide();
@@ -283,7 +263,7 @@ module otherLid() {
   color("white")
     otherSide();
 
-  translate([0, $thick_gap * 6 + $material_thickness * 6, 0])
+  translate([0, width - $material_thickness, 0])
     color("red")
     otherSide();
 

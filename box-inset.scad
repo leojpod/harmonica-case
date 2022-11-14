@@ -1,10 +1,10 @@
 include <./dimensions.scad>
 
 // inside-slant offset ->
-offset = 8 + ($height_gap + $material_thickness) / tan (90-$slant_angle);
+offset = $material_thickness + ($height_gap + $material_thickness) / tan (90-$slant_angle) + 2;
 margin = 5;
 
-insideWidth = 6 * $thick_gap + 5 * $material_thickness;
+insideWidth = $horizontalPlacements * $thick_gap + ($horizontalPlacements - 1) * $material_thickness;
 
 module horizontalPlank(height) {
   offsetted_height = height - offset;
@@ -19,21 +19,22 @@ module horizontalPlank(height) {
       translate([offsetted_height - 30, - $material_thickness, 0])
         cube([10, insideWidth + 2 * $material_thickness, $material_thickness]);
     }
-    // first set of knotches
-    for (i=[0:2]) {
-      translate([- margin, $thick_gap + (i * 2 * ($thick_gap + $material_thickness)), - margin ])
+    // notches
+    for(i=[0:($horizontalPlacements - 2)]) {
+      horizontalShift = (i + 1) * $thick_gap + (i *  $material_thickness);
+      if (i % 2 == 0){
+        translate([- margin, horizontalShift, - margin ])
         cube([offsetted_height / 2 + margin, $material_thickness, 2*margin +  $material_thickness]);
-    }
-    // second set of knotches
-    for (i=[0:1]) {
-      translate([offsetted_height / 2, 2 * $thick_gap + $material_thickness + (i * 2 * ($thick_gap + $material_thickness)), - margin ])
+      } else {
+        translate([offsetted_height / 2, horizontalShift, - margin])
         cube([offsetted_height / 2 + margin, $material_thickness, 2*margin + $material_thickness]);
+      }
     }
   }
 }
 
 module insideSlant() {
-  slantHeight = 2 * $height_gap + $material_thickness;
+  slantHeight = (2 * $height_gap + $material_thickness) / sin(90 - $slant_angle) - $material_thickness;
   union() {
     cube([$material_thickness, insideWidth, slantHeight]);
     translate([0, - $material_thickness, (slantHeight / 3) - 5])
@@ -43,11 +44,11 @@ module insideSlant() {
   }
 }
 
-module verticalSeparator(height, front_knotch = true) {
+module verticalSeparator(height, front_notch = true) {
   offsetted_height = height - offset;
   separatorWidth = 2 * $height_gap + $material_thickness;
 
-  base = 8 + margin;
+  base = 4 + margin;
   bottomOffset = base + (separatorWidth + 2 * margin) / tan(90-$slant_angle);
 
   // wedge cutout
@@ -79,7 +80,7 @@ module verticalSeparator(height, front_knotch = true) {
     }
     translate([-margin, -margin, -margin])
       polyhedron(wedgePoints, wedgeFaces);
-    if (front_knotch) {
+    if (front_notch) {
       translate([offset + offsetted_height / 2, -margin, $height_gap])
         cube([offsetted_height / 2 + margin, $material_thickness + 2 * margin, $material_thickness]);
     } else {
@@ -93,29 +94,22 @@ module boxInset(height = $insideHeight) {
   translate([offset, 0, 30])
     horizontalPlank(height);
 
-  translate([30 - $material_thickness, 0, 0])
-  rotate([0, -20, 0])
+  translate([($height_gap * 2 + $material_thickness)/ tan(90 - $slant_angle) - 0.25 * $material_thickness, 0, 0.25 * $material_thickness])
+  rotate([0, -$slant_angle, 0])
     insideSlant();
 
-  color("blue")
-  translate([0, $thick_gap, 0])
-    verticalSeparator(height);
-
-  color("blue")
-  translate([0, 3 * $thick_gap + 2 * $material_thickness, 0])
-    verticalSeparator(height);
-
-  color("blue")
-  translate([0, 5 * $thick_gap + 4 * $material_thickness, 0])
-    verticalSeparator(height);
-
-  color("green")
-  translate([0, 2 * $thick_gap + 1 * $material_thickness, 0])
-    verticalSeparator(height);
-
-  color("green")
-  translate([0, 4 * $thick_gap + 3 * $material_thickness, 0])
-    verticalSeparator(height);
+  for(i=[0:($horizontalPlacements - 2)]) {
+    horizontalShift = [0, (i + 1) * $thick_gap + i * $material_thickness, 0];
+    if(i % 2 == 0) {
+      color("blue")
+      translate(horizontalShift)
+      verticalSeparator(height, true);
+    } else {
+      color("green")
+      translate(horizontalShift)
+      verticalSeparator(height, false);
+    }
+  }
 }
 
 boxInset();

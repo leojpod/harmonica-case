@@ -33,22 +33,22 @@ rotate([0, -17, 0]) {
   translate([$material_thickness, $material_thickness, $material_thickness]) {
     boxInset();
     color("white") {
-      translate([32, 0, 0])
-      for (i=[0:5]) {
+      translate([(2 * $height_gap + $material_thickness) / tan(90-$slant_angle) + $material_thickness, 0, 0])
+      for (i=[0:($horizontalPlacements - 1)]) {
         translate([0, i * ($thick_gap + $material_thickness), 0])
           harmonicaBody();
       }
-      translate([$height_gap/(tan(90-$slant_angle)) + 8, 0, $height_gap + $material_thickness])
-      for (i=[0:5]) {
+      translate([$height_gap/(tan(90-$slant_angle)) + $material_thickness + 2, 0, $height_gap + $material_thickness])
+      for (i=[0:($horizontalPlacements - 1)]) {
         translate([0, i * ($thick_gap + $material_thickness), 0])
           harmonicaBody();
       }
     }
   }
 
-  /* boxOutset(); */
-  translate([$insideHeight + $outsetMargin, 0, 0])
-  lid();
+  boxOutset();
+  /* translate([$insideHeight + $outsetMargin, 0, 0]) */
+  /* lid(); */
   translate([$insideHeight + $outsetMargin, 0, 0])
   rotate([0, 180, 0])
   standLid();

@@ -2,7 +2,7 @@ include <./dimensions.scad>
 use <./box-inset.scad>
 use <./crenel.scad>
 
-width = 6 * $thick_gap + 7 * $material_thickness;
+width = $horizontalPlacements * $thick_gap + ($horizontalPlacements + 1) * $material_thickness;
 depth = 2 * $height_gap + 3 * $material_thickness;
 
 margin = 2;
@@ -81,8 +81,8 @@ module boxOutset(insetHeight = $insideHeight, outsetMargin = $outsetMargin) {
   translate([0,0, depth - $material_thickness])
   long_side(height);
 
-  color("violet")
-  short_side(height);
+  /* color("violet") */
+  /* short_side(height); */
   color("yellow")
   translate([0,width - $material_thickness,0])
   short_side(height);
