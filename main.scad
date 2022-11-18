@@ -1,6 +1,6 @@
 // Box body
 
-/*   top 
+/*   top
  *   ____
  *  /    \ <- lid
  *  |    |
@@ -16,8 +16,8 @@
 /*
  * DIMENSIONS
  *
- * Harmonica: 
- *  - roughly: 105 x 20 x 30
+ * Harmonica:
+ *  - roughly: 105 x 25 x 30
  *
  * harmonica stored along the X axis
  */
@@ -27,9 +27,9 @@ use <./harmonica-body.scad>
 
 use <./box-inset.scad>
 use <./box-outset.scad>
-use <./lid.scad>
+include <./lid.scad>
 
-rotate([0, -17, 0]) {
+rotate([0, -($angle), 0]) {
   translate([$material_thickness, $material_thickness, $material_thickness]) {
     boxInset();
     color("white") {
@@ -47,8 +47,8 @@ rotate([0, -17, 0]) {
   }
 
   boxOutset();
-  /* translate([$insideHeight + $outsetMargin, 0, 0]) */
-  /* lid(); */
+  translate([$insideHeight + $outsetMargin, 0, 0])
+  lid();
   translate([$insideHeight + $outsetMargin, 0, 0])
   rotate([0, 180, 0])
   standLid();

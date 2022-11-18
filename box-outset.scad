@@ -1,3 +1,27 @@
+/*
+ * This file models the outwards part of the case:
+ *
+ *    ______________________________
+ *   /                             /|
+ *  /                             / |
+ * /_____________________________/  |
+ * |                             |  |
+ * |                             |  | <- short side
+ * |                             |  |
+ * |                             |  |
+ * |                             |  |
+ * |                          <----------- long side
+ * |                             |  |
+ * |                             |  /
+ * |                             | /
+ * |_____________________________|/
+ *       ^ bottom
+ *
+ *
+ * *short side*: has notches for inside slant's wings and the horizontal plank's short side wings
+ * *long side*: has notches for veritcal separators' wings
+ * *bottom*: no notches
+ */
 include <./dimensions.scad>
 use <./box-inset.scad>
 use <./crenel.scad>
@@ -81,8 +105,8 @@ module boxOutset(insetHeight = $insideHeight, outsetMargin = $outsetMargin) {
   translate([0,0, depth - $material_thickness])
   long_side(height);
 
-  /* color("violet") */
-  /* short_side(height); */
+  color("violet")
+  short_side(height);
   color("yellow")
   translate([0,width - $material_thickness,0])
   short_side(height);

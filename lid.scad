@@ -1,25 +1,45 @@
+/*
+ * This file models the lid.
+ * it has 2 parts, the part that can be used as a stand, and the other one.
+ *
+ * the stand part is a bit shorter and will hold a lock part that can attach to close the lid or to fix the cover in an open position.
+ *
+ */
+
 include <./dimensions.scad>
 use <./crenel.scad>
 
 lidDepth = $height_gap + 3 * $material_thickness / 2;
+echo("lidDepth -> ", lidDepth);
 width = $thick_gap * $horizontalPlacements + ($horizontalPlacements + 1) * $material_thickness;
 margin = 2;
-flatHeight = 20;
+// TODO compute that one based on the insideHeight, the outsetMargin and the slant angle
+flatHeight = ceil(($length_gap + ($height_gap * 2 + $material_thickness)/tan(90-$slant_angle)) - $insideHeight - $outsetMargin);
+echo("flatHeight -> ", flatHeight);
 
 circularRadius = 2 * lidDepth/3;
+echo("Circular radius -> ", circularRadius);
+
+bodyLength = $insideHeight + $outsetMargin;
+
+wedgeLength =  floor(circularRadius * bodyLength/(bodyLength - flatHeight - circularRadius) - circularRadius);
+echo("wedge length -> ", wedgeLength);
+
+$angle = asin((wedgeLength + circularRadius) / ($insideHeight + $outsetMargin));
+echo("angle -> ", $angle);
 
 wedgePoints = [
-  [0, 0, lidDepth - circularRadius], // 0
+  [0, 0, wedgeLength], // 0
   [flatHeight + circularRadius, 0, 0], // 1
-  [0, 0, 0], // 2
-  [0, $material_thickness, lidDepth - circularRadius], // 3
+  [0,0,0], // 2
+  [0, $material_thickness, wedgeLength], // 3
   [flatHeight + circularRadius, $material_thickness, 0], // 4
   [0, $material_thickness, 0] // 5
 ];
 wedgeFaces = [
  [0, 1, 2],
  [3, 4, 1, 0],
- [3, 4, 5],
+ [3, 5, 4],
  [4, 5, 2, 1],
  [5, 3, 0, 2]
 ];
@@ -56,18 +76,19 @@ module roundedTop() {
 
 module roundedSideFlatten() {
   w = round(width * 0.05);
-  flattenLength = PI * .5 * (circularRadius - $material_thickness);
+  flattenLength = PI * .5 * (circularRadius - 0.5 * $material_thickness);
 
   difference() {
     cube([flatHeight + flattenLength, width, $material_thickness]);
 
-    translate([flatHeight + flattenLength, + w + (width - w * 20) / 2, 0])
+    translate([flatHeight + flattenLength, $material_thickness + w, 0])
       rotate([0, 0, 90])
       crenel(10, w);
 
+    translate([$material_thickness, 0, 0])
     crenel(3, $material_thickness);
 
-    translate([0, width, $material_thickness])
+    translate([$material_thickness, width, $material_thickness])
     rotate([180, 0, 0])
       crenel(3, $material_thickness);
   }
@@ -87,9 +108,10 @@ module roundedSide() {
       rotate([90, 0, 90])
       crenel(10, w);
 
+    translate([$material_thickness, 0, 0])
     crenel(3, $material_thickness);
 
-    translate([0, width, $material_thickness])
+    translate([$material_thickness, width, $material_thickness])
     rotate([180, 0, 0])
       crenel(3, $material_thickness);
   }
@@ -103,21 +125,18 @@ module standSide() {
       translate([flatHeight, 0, circularRadius])
         roundedCorner(circularRadius - $material_thickness);
 
-      difference() {
-        translate([0, 0, circularRadius])
-          cube([flatHeight + circularRadius, $material_thickness, lidDepth - circularRadius]);
-
-        translate([0, -margin, lidDepth])
-          rotate([0,  atan((lidDepth - circularRadius) / (flatHeight + circularRadius)), 0])
-          cube([width / 2, $material_thickness + 2 * margin, width / 2]);
-      }
+      translate([0, 0, circularRadius])
+        polyhedron(wedgePoints, wedgeFaces);
     }
-    translate([$material_thickness, $material_thickness, 0])
+    translate([0, $material_thickness, 0])
       rotate([90,0,0])
-      crenel(2, $material_thickness);
+      crenel(4, $material_thickness);
 
     translate([flatHeight + circularRadius - $material_thickness - 10, - 10 + $material_thickness / 2, circularRadius - $material_thickness])
       cube([5, 20, $material_thickness]);
+
+    translate([flatHeight + circularRadius - $material_thickness,-margin,circularRadius])
+      cube([$material_thickness, 2 * margin + $material_thickness, $material_thickness]);
   }
 }
 
@@ -136,57 +155,87 @@ module stabiliser() {
 
     translate([10 + $material_thickness, 0, 0])
       rotate([0, 0, 90])
-      crenel(10, w);
+      crenel(11, w);
   }
 }
 
 module standLid() {
   standSide();
 
+  color("red")
   translate([0, width - $material_thickness, 0])
     standSide();
 
+  color("blue")
   roundedSide();
 
+  color("green")
   translate([flatHeight + circularRadius - $material_thickness - 10, 0, circularRadius - $material_thickness])
     stabiliser();
 }
 
+
 module otherSide() {
-  union() {
-    difference() {
-      cube([flatHeight, $material_thickness, lidDepth]);
+  otherWedgePoints = [ 
+    [0, 0, 0], // 0
+    [0, 0, lidDepth - 2 * circularRadius - wedgeLength], // 1
+    [0, $material_thickness, lidDepth - 2 * circularRadius - wedgeLength], // 2
+    [0, $material_thickness, 0], // 3
+    [flatHeight + circularRadius, 0, 0], // 4
+    [flatHeight + circularRadius, 0, lidDepth - 2 * circularRadius], // 5
+    [flatHeight + circularRadius, $material_thickness, lidDepth - 2 * circularRadius], // 6
+    [flatHeight + circularRadius, $material_thickness, 0]  // 7
+  ];
 
-      translate([0, $material_thickness, lidDepth - $material_thickness + margin])
-        rotate([90, 0, 0])
-        crenel(5, $material_thickness);
+  otherWedgeFaces = [
+    [0,1,2,3], // bottom
+    [4,5,1,0], // front
+    [7,6,5,4], // top
+    [5,6,2,1], // right
+    [6,7,3,2], // back
+    [7,4,0,3]  // left;
+  ];
+  difference() {
+    union() {
+      difference() {
+        cube([flatHeight, $material_thickness, lidDepth]);
+
+        translate([0, $material_thickness, lidDepth - $material_thickness + margin])
+          rotate([90, 0, 0])
+          crenel(4, $material_thickness);
+      }
+
+      translate([flatHeight, 0, lidDepth - circularRadius])
+        rotate([0,-90, 0])
+        roundedCorner(circularRadius - $material_thickness);
+
+      difference() {
+        translate([0, 0, -lidDepth + circularRadius])
+          cube([flatHeight + circularRadius, $material_thickness, (lidDepth - circularRadius) * 2]);
+
+
+        translate([flatHeight + circularRadius, 0, 3.5 * $material_thickness])
+          rotate([0,90,90])
+          crenel(4, $material_thickness);
+      }
     }
 
-    translate([flatHeight, 0, lidDepth - circularRadius])
-      rotate([0,-90, 0])
-      roundedCorner(circularRadius - $material_thickness);
+    translate([0, 0, -lidDepth])
+      union() {
+        standSide();
+        // some quick rendering cleanup
+        translate([0, 0.5 * $material_thickness, 0])
+          standSide();
+        translate([0, -0.5 * $material_thickness, 0])
+          standSide();
+      }
 
-    difference() {
-      translate([0, 0, -lidDepth + circularRadius])
-        cube([flatHeight + circularRadius, $material_thickness, (lidDepth - circularRadius) * 2]);
-
-      /* height: lidDepth - circularRadius, 
-       * width: flatHeight + circularRadius
-       *
-       * tan x = height / width
-       */
-      translate([0, -margin, 0])
-        rotate([0, 90 + atan((lidDepth - circularRadius) / (flatHeight + circularRadius)), 0])
-        cube([width / 2, $material_thickness + 2 * margin, width / 2]);
-
-      translate([flatHeight + circularRadius, 0, + flatHeight +  $material_thickness / 2])
-        rotate([0,90,90])
-        crenel(5, $material_thickness);
-    }
+    translate([flatHeight,-$material_thickness, - (2 * lidDepth - 2* circularRadius ) + margin])
+      cube([circularRadius - $material_thickness, 3 * $material_thickness, 3 * $material_thickness]);
   }
 }
 
-module otherRoundedCorner() {
+module otherRoundedSide() {
   union() {
     difference() {
       translate([0, 0, lidDepth - $material_thickness])
@@ -194,18 +243,18 @@ module otherRoundedCorner() {
 
       translate([$material_thickness,0, lidDepth - $material_thickness])
         rotate([0, 0, 0])
-        crenel(2, $material_thickness);
+        crenel(3, $material_thickness);
 
       translate([$material_thickness,width, lidDepth ])
         rotate([180, 0, 0])
-        crenel(2, $material_thickness);
+        crenel(3, $material_thickness);
     }
 
     translate([flatHeight, width, lidDepth])
       rotate([180, 0, 0])
       roundedTop();
 
-    difference() {
+    #difference() {
       translate([flatHeight + circularRadius - $material_thickness, 0, - lidDepth + circularRadius])
         cube([$material_thickness, width, (lidDepth - circularRadius) * 2]);
 
@@ -220,8 +269,8 @@ module otherRoundedCorner() {
   }
 }
 
-module otherRoundedCornerFlatten() {
-  flattenLength = PI * .5 * (circularRadius - $material_thickness);
+module otherRoundedSideFlatten() {
+  flattenLength = PI * .5 * (circularRadius - 0.5 * $material_thickness);
 
   translate([0, 0, -lidDepth + $material_thickness])
   union() {
@@ -231,25 +280,24 @@ module otherRoundedCornerFlatten() {
 
       translate([$material_thickness,0, lidDepth - $material_thickness])
         rotate([0, 0, 0])
-        crenel(2, $material_thickness);
+        crenel(3, $material_thickness);
 
       translate([$material_thickness,width, lidDepth ])
         rotate([180, 0, 0])
-        crenel(2, $material_thickness);
+        crenel(3, $material_thickness);
     }
 
-    translate([(lidDepth - circularRadius) + flattenLength + flatHeight, 0, lidDepth * 2 + $material_thickness])
+    translate([flatHeight + flattenLength,0,lidDepth])
     rotate([0, 90, 0])
-    difference() {
-      translate([flatHeight + circularRadius - $material_thickness, 0, - lidDepth + circularRadius])
-        rotate([0, 0, 0])
+    #difference() {
+      translate([0, 0, 0])
         cube([$material_thickness, width, (lidDepth - circularRadius) * 2]);
 
-      translate([flatHeight + circularRadius - $material_thickness, 0, lidDepth - circularRadius - $material_thickness / 2])
+      translate([0, 0, (lidDepth - circularRadius) * 2 - $material_thickness / 2])
         rotate([0, 90, 0])
         crenel(3, $material_thickness);
 
-      translate([flatHeight + circularRadius - $material_thickness, width - $material_thickness + margin, lidDepth - circularRadius - $material_thickness / 2])
+      translate([0, width - $material_thickness + margin, (lidDepth - circularRadius) * 2 - $material_thickness / 2])
         rotate([0, 90, 0])
         crenel(3, $material_thickness);
     }
@@ -263,12 +311,11 @@ module otherLid() {
   color("white")
     otherSide();
 
-  translate([0, width - $material_thickness, 0])
-    color("red")
+  translate([0, width + $material_thickness, 0])
     otherSide();
 
   color("green")
-    otherRoundedCorner();
+    otherRoundedSide();
 }
 
 module lid() {
@@ -281,4 +328,4 @@ module lid() {
 
 
 
-lid();
+otherLid();

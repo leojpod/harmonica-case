@@ -1,7 +1,7 @@
 include <./dimensions.scad>
 use <./lid.scad>
 
-width = $thick_gap * 6 + 7 * $material_thickness;
+width = $thick_gap * 5 + 6 * $material_thickness;
 
 margin = 5;
 
@@ -22,28 +22,31 @@ module standLidPieces() {
 
 
   color("black")
-  translate([70, 0, 0])
+  translate([80, 0, 0])
   mirror([1,0,0])
   stabiliser();
 }
 
 module otherLidPieces() {
-  translate([0, -10 -margin, 0])
-  rotate([90, 0, 0])
+  translate([0, -35 -margin, $material_thickness])
+  rotate([-90, 0, 0])
   otherSide();
 
-  translate([0, width + 10 + margin, 0])
+  translate([0, width + 35 + margin, $material_thickness])
   mirror([0,1,0])
-  rotate([90, 0, 0])
+  rotate([-90, 0, 0])
   otherSide();
 
-  otherRoundedCornerFlatten();
+  otherRoundedSideFlatten();
+
+  translate([0, 0, -50])
+  otherRoundedSide();
 }
 
 module flatPieces () {
   standLidPieces();
 
-  translate([-80, 0, 0])
+  translate([-90, 0, 0])
   otherLidPieces();
 }
 
