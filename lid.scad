@@ -254,7 +254,7 @@ module otherRoundedSide() {
       rotate([180, 0, 0])
       roundedTop();
 
-    #difference() {
+    difference() {
       translate([flatHeight + circularRadius - $material_thickness, 0, - lidDepth + circularRadius])
         cube([$material_thickness, width, (lidDepth - circularRadius) * 2]);
 
@@ -289,7 +289,7 @@ module otherRoundedSideFlatten() {
 
     translate([flatHeight + flattenLength,0,lidDepth])
     rotate([0, 90, 0])
-    #difference() {
+    difference() {
       translate([0, 0, 0])
         cube([$material_thickness, width, (lidDepth - circularRadius) * 2]);
 
@@ -311,7 +311,7 @@ module otherLid() {
   color("white")
     otherSide();
 
-  translate([0, width + $material_thickness, 0])
+  translate([0, width - $material_thickness, 0])
     otherSide();
 
   color("green")
@@ -328,4 +328,4 @@ module lid() {
 
 
 
-otherLid();
+/* otherLid(); */

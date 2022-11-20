@@ -62,9 +62,9 @@ module long_side(height) {
     cube([height, width, $material_thickness]);
     //long-side <-> short side 
     translate([- 10 + $material_thickness, 0, 0])
-      crenel(7);
+      crenel(6);
     translate([- 10 + $material_thickness, width - margin, 0])
-      crenel(7);
+      crenel(6);
     // long-side <-> bottom
     translate([margin, -10, 0])
     rotate([0, 0, 90])
@@ -80,10 +80,21 @@ module short_side(height) {
     // short-side <-> long-side
     translate([$material_thickness, 0, margin])
     rotate([-90,0, 0])
-      crenel(6);
+      union() {
+        crenel(5);
+
+        // extra clearance (a bit bigger than the crenel, so we don't end up with a few mm left over after it)
+        translate([2 * 10 * 5, -margin, -margin])
+        cube([15, $material_thickness + margin, $material_thickness + 2 * margin]);
+      }
     translate([$material_thickness, 2 * margin, depth - margin])
     rotate([90,0, 0])
-      crenel(6);
+      union() {
+        crenel(5);
+
+        translate([2 * 10 * 5, -margin, -margin])
+        cube([15, $material_thickness + margin, $material_thickness + 2 * margin]);
+      }
     // short-side <-> bottom
     translate([0, 0, (depth - 50) / 2])
     rotate([-90,-90, 0])

@@ -39,8 +39,6 @@ module otherLidPieces() {
 
   otherRoundedSideFlatten();
 
-  translate([0, 0, -50])
-  otherRoundedSide();
 }
 
 module flatPieces () {
