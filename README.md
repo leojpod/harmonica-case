@@ -37,13 +37,21 @@ The whole thing is meant to be assembled from laser cut parts.
   - 2 short sides
   - 1 bottom
 
-- For the lid:
-  - ***TODO put the list here***
+- For the lid (the lid is in 2 parts: the stand part -- that support the box when it's open, and the "other" -- that is folder over the top of the box when it's open ):
+  - "stand" parts: 
+    - 2 short sides
+    - 1 stabiliser
+    - 1 long cork side
+  - "other" parts: 
+    - 2 short sides
+    - 1 long cork side
 
 ### Other pieces & material
 
 - the lid lock
     - ***TODO find one and explain it here***
 - the lid hinge joins
+    - ***TODO Same***
+- the carry strings
     - ***TODO Same***
 
