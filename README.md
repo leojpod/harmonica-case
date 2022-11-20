@@ -7,7 +7,7 @@ The case should also open in a way that would allow to easily locate and pick up
 ## The story behind this
 I used to put my harmonicas on my hand made stand-up desk, but I start to have too many to line up like in this picture.
 
-***TODO put a picture here***
+![IMG_20221030_145218](https://user-images.githubusercontent.com/4479457/202927481-43aaefc8-f4df-43ff-afca-a8ba6212d1d5.jpg)
 
 After a few drawing on paper, I thought "why not make something that could hold my harmonicas but also display them".
 Few more paper draft later, I started to play with FreeCAD, but I was quite unhappy with it eventually, and I like the ability to "code" my model and to version it.
