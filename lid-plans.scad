@@ -15,22 +15,21 @@ module standLidPieces() {
   translate([0, width + margin, 0])
   mirror([0, 1,0])
   rotate([90, 0, 0])
-  standSide();
+  verticalStabiliser();
 
   color("red")
   roundedSideFlatten();
 
-
   color("black")
-  translate([80, 0, 0])
+  translate([85, 0, 0])
   mirror([1,0,0])
-  stabiliser();
+  stabiliser(true);
 }
 
 module otherLidPieces() {
   translate([0, -35 -margin, $material_thickness])
   rotate([-90, 0, 0])
-  otherSide();
+  otherSide(true);
 
   translate([0, width + 35 + margin, $material_thickness])
   mirror([0,1,0])
@@ -39,6 +38,8 @@ module otherLidPieces() {
 
   otherRoundedSideFlatten();
 
+  translate([-20, 0, 0])
+    stabiliser(false);
 }
 
 module flatPieces () {

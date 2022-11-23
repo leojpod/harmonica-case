@@ -9,3 +9,10 @@ module crenel(repetitions, size = 10) {
   }
 }
 
+module hole_crenel(repetitions, size = 10) {
+  for(i=[1:repetitions]) {
+    translate([2 * size * (i -1), 0, -margin])
+      cube([size, $material_thickness, $material_thickness + 2 * margin]);
+  }
+}
+

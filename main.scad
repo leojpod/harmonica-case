@@ -47,8 +47,8 @@ rotate([0, -($angle), 0]) {
   }
 
   boxOutset();
-  translate([$insideHeight + $outsetMargin, 0, 0])
-  lid();
+  /* translate([$insideHeight + $outsetMargin, 0, 0]) */
+  /* lid(); */
   translate([$insideHeight + $outsetMargin, 0, 0])
   rotate([0, 180, 0])
   standLid();
