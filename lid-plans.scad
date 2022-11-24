@@ -20,7 +20,6 @@ module standLidPieces() {
   color("red")
   roundedSideFlatten();
 
-
   color("black")
   translate([80, 0, 0])
   mirror([1,0,0])
@@ -38,7 +37,6 @@ module otherLidPieces() {
   otherSide();
 
   otherRoundedSideFlatten();
-
 }
 
 module flatPieces () {

@@ -14,7 +14,7 @@ echo("lidDepth -> ", lidDepth);
 width = $thick_gap * $horizontalPlacements + ($horizontalPlacements + 1) * $material_thickness;
 margin = 2;
 // TODO compute that one based on the insideHeight, the outsetMargin and the slant angle
-flatHeight = ceil(($length_gap + ($height_gap * 2 + $material_thickness)/tan(90-$slant_angle)) - $insideHeight - $outsetMargin);
+flatHeight = ceil(($length_gap + ($height_gap * 2 + $material_thickness)/tan(90-$slant_angle)) - $insideHeight - $outsetMargin) + 2* margin;
 echo("flatHeight -> ", flatHeight);
 
 circularRadius = 2 * lidDepth/3;
@@ -25,7 +25,7 @@ bodyLength = $insideHeight + $outsetMargin;
 wedgeLength =  floor(circularRadius * bodyLength/(bodyLength - flatHeight - circularRadius) - circularRadius);
 echo("wedge length -> ", wedgeLength);
 
-$angle = asin((wedgeLength + circularRadius) / ($insideHeight + $outsetMargin));
+$angle = floor(asin((wedgeLength + circularRadius) / (bodyLength)));
 echo("angle -> ", $angle);
 
 wedgePoints = [
@@ -132,6 +132,9 @@ module standSide() {
       rotate([90,0,0])
       crenel(4, $material_thickness);
 
+    translate([2 * $material_thickness * 3,-$material_thickness, - $material_thickness])
+      cube([3 * $material_thickness, 3 * $material_thickness, $material_thickness + 2 * margin ]);
+
     translate([flatHeight + circularRadius - $material_thickness - 10, - 10 + $material_thickness / 2, circularRadius - $material_thickness])
       cube([5, 20, $material_thickness]);
 
@@ -176,25 +179,6 @@ module standLid() {
 
 
 module otherSide() {
-  otherWedgePoints = [ 
-    [0, 0, 0], // 0
-    [0, 0, lidDepth - 2 * circularRadius - wedgeLength], // 1
-    [0, $material_thickness, lidDepth - 2 * circularRadius - wedgeLength], // 2
-    [0, $material_thickness, 0], // 3
-    [flatHeight + circularRadius, 0, 0], // 4
-    [flatHeight + circularRadius, 0, lidDepth - 2 * circularRadius], // 5
-    [flatHeight + circularRadius, $material_thickness, lidDepth - 2 * circularRadius], // 6
-    [flatHeight + circularRadius, $material_thickness, 0]  // 7
-  ];
-
-  otherWedgeFaces = [
-    [0,1,2,3], // bottom
-    [4,5,1,0], // front
-    [7,6,5,4], // top
-    [5,6,2,1], // right
-    [6,7,3,2], // back
-    [7,4,0,3]  // left;
-  ];
   difference() {
     union() {
       difference() {
@@ -203,6 +187,9 @@ module otherSide() {
         translate([0, $material_thickness, lidDepth - $material_thickness + margin])
           rotate([90, 0, 0])
           crenel(4, $material_thickness);
+
+        translate([2 * $material_thickness * 3,-$material_thickness, lidDepth - $material_thickness])
+          cube([3 * $material_thickness, 3 * $material_thickness, $material_thickness + 2 * margin ]);
       }
 
       translate([flatHeight, 0, lidDepth - circularRadius])
@@ -276,7 +263,7 @@ module otherRoundedSideFlatten() {
   union() {
     difference() {
       translate([0, 0, lidDepth - $material_thickness])
-        cube([flatHeight + flattenLength, width, $material_thickness]);
+        #cube([flatHeight + flattenLength, width, $material_thickness]);
 
       translate([$material_thickness,0, lidDepth - $material_thickness])
         rotate([0, 0, 0])
@@ -328,4 +315,4 @@ module lid() {
 
 
 
-/* otherLid(); */
+otherLid();
