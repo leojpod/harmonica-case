@@ -76,7 +76,7 @@ module roundedTop() {
 
 module roundedSideFlatten() {
   w = round(width * 0.05);
-  flattenLength = PI * .5 * (circularRadius - 0.5 * $material_thickness);
+  flattenLength = PI * .5 * (circularRadius - $material_thickness);
 
   difference() {
     cube([flatHeight + flattenLength, width, $material_thickness]);
@@ -257,7 +257,7 @@ module otherRoundedSide() {
 }
 
 module otherRoundedSideFlatten() {
-  flattenLength = PI * .5 * (circularRadius - 0.5 * $material_thickness);
+  flattenLength = PI * .5 * (circularRadius - $material_thickness);
 
   translate([0, 0, -lidDepth + $material_thickness])
   union() {
