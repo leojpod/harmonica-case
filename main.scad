@@ -21,17 +21,18 @@
  *
  * harmonica stored along the X axis
  */
-include <./dimensions.scad>
+include <./3d-models/dimensions.scad>
 
-use <./harmonica-body.scad>
+use <./3d-models/harmonica-body.scad>
 
-use <./box-inset.scad>
-use <./box-outset.scad>
-include <./lid.scad>
+use <./3d-models/box-inset.scad>
+use <./3d-models/box-outset.scad>
+include <./3d-models/lid.scad>
 
 rotate([0, -($angle), 0]) {
   translate([$material_thickness, $material_thickness, $material_thickness]) {
     boxInset();
+    // harmonicas as example
     color("white") {
       translate([(2 * $height_gap + $material_thickness) / tan(90-$slant_angle) + $material_thickness, 0, 0])
       for (i=[0:($horizontalPlacements - 1)]) {
@@ -47,8 +48,8 @@ rotate([0, -($angle), 0]) {
   }
 
   boxOutset();
-  translate([$insideHeight + $outsetMargin, 0, 0])
-  lid();
+  //translate([$insideHeight + $outsetMargin, 0, 0])
+  //lid();
   translate([$insideHeight + $outsetMargin, 0, 0])
   rotate([0, 180, 0])
   standLid();

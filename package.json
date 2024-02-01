@@ -1,0 +1,13 @@
+{
+  "name": "harmonica-case",
+  "version": "1.0.0",
+  "description": "OpenSCAD project for an harmonica travel case in laser-cut wood.",
+  "main": "README.md",
+  "repository": "git@github.com:leojpod/harmonica-case.git",
+  "author": "Leo jPod <leo.jpod@lilo.org>",
+  "license": "DBAD",
+  "private": false,
+  "dependencies": {
+    "prettier": "^2.8.8"
+  }
+}
