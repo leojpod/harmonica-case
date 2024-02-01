@@ -45,7 +45,7 @@ module horizontalPlank(height, level = 1) {
     // notches
     for(i=[0:($horizontalPlacements - 2)]) {
       horizontalShift = (i + 1) * $thickGap + (i *  $materialThickness);
-      if (i % 2 == 0){
+      if (i % 2 != 0){
         translate([offsetted_height / 2, horizontalShift, - margin ])
         cube([offsetted_height / 2 + margin, $materialThickness, 2*margin +  $materialThickness]);
       } else {
@@ -107,18 +107,19 @@ module verticalSeparator(height, is_even = true) {
   }
 }
 
-module boxInset(height = $insetLength) {
+module boxInset(height = $insetLength, isSplit = false) {
   for(i=[1:($verticalPlacements - 1)]) {
     translate([0, 0, $heightGap + (i-1) * ($heightGap + $materialThickness)])
       horizontalPlank(height, i);
   }
 
-  translate([offsetCalculator(0) - $materialThickness * 2, 0, 0.25 * $materialThickness])
+  translate([(isSplit? -1.2*height : 0) + offsetCalculator(0) - $materialThickness * 2, 0, 0.25 * $materialThickness])
   rotate([0, -$slantAngle, 0])
     insideSlant();
 
   for(i=[0:($horizontalPlacements - 2)]) {
-    horizontalShift = [0, (i + 1) * $thickGap + i * $materialThickness, 0];
+    x_offset = isSplit ? ((i % 2 == 0) ? -1.1*height : 1.1*height) : 0;
+    horizontalShift = [x_offset, (i + 1) * $thickGap + i * $materialThickness, 0];
     if(i % 2 == 0) {
       color("blue")
       translate(horizontalShift)
@@ -131,7 +132,7 @@ module boxInset(height = $insetLength) {
   }
 }
 
-boxInset();
+boxInset(isSplit = false);
 
 if (false) {
   translate([offsetCalculator(0), 0, 0])

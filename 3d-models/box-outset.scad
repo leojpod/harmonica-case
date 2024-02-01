@@ -38,20 +38,24 @@ module bottom() {
     rotate([0,-90, 0])
       crenel(6, depth/12);
   };
-  difference() {
-    cube([$materialThickness, width, depth]);
-    rotate([90, 0, 90])
-      crenel(6, width/12);
-    translate([0, 0, depth - margin])
-    rotate([90, 0, 90])
-      crenel(6, width/12);
-    sideCrenel();
-    translate([0, width - margin, 0])
-    sideCrenel();
-    translate([-$materialThickness,-$materialThickness,depth - $materialThickness])
-      cube(10);
-    translate([-$materialThickness,width - $materialThickness,-$materialThickness])
-      cube(10);
+  union() {
+    difference() {
+      cube([$materialThickness, width, depth]);
+      rotate([90, 0, 90])
+        crenel(6, width/12);
+      translate([0, 0, depth - margin])
+      rotate([90, 0, 90])
+        crenel(6, width/12);
+      sideCrenel();
+      translate([0, width - margin, 0])
+      sideCrenel();
+      translate([-$materialThickness,-$materialThickness,depth - $materialThickness])
+        cube(10);
+      translate([-$materialThickness,width - $materialThickness,-$materialThickness])
+        cube(10);
+    }
+    translate([0,0,depth - $materialThickness])
+      cube($materialThickness);
   }
 }
 
@@ -116,4 +120,4 @@ module boxOutset(insetLength = $insetLength, outsetMargin = $outsetMargin, extra
 }
 
 
-boxOutset(extraSpace = 10);
+boxOutset(extraSpace = 0);

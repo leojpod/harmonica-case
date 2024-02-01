@@ -30,30 +30,30 @@ use <./3d-models/box-outset.scad>
 include <./3d-models/lid.scad>
 
 rotate([0, -($angle), 0]) {
-  translate([$material_thickness, $material_thickness, $material_thickness]) {
+  translate([$materialThickness,$materialThickness,$materialThickness]) {
     boxInset();
     // harmonicas as example
     color("white") {
-      translate([(2 * $height_gap + $material_thickness) / tan(90-$slant_angle) + $material_thickness, 0, 0])
+      translate([(2 * $heightGap + $materialThickness) / tan(90-$slantAngle) + $materialThickness, 0, 0])
       for (i=[0:($horizontalPlacements - 1)]) {
-        translate([0, i * ($thick_gap + $material_thickness), 0])
+        translate([0, i * ($thickGap + $materialThickness), 0])
           harmonicaBody();
       }
-      translate([$height_gap/(tan(90-$slant_angle)) + $material_thickness + 2, 0, $height_gap + $material_thickness])
+      translate([$heightGap/(tan(90-$slantAngle)) + $materialThickness + 2, 0, $heightGap + $materialThickness])
       for (i=[0:($horizontalPlacements - 1)]) {
-        translate([0, i * ($thick_gap + $material_thickness), 0])
+        translate([0, i * ($thickGap + $materialThickness), 0])
           harmonicaBody();
       }
     }
   }
 
   boxOutset();
-  //translate([$insideHeight + $outsetMargin, 0, 0])
-  //lid();
-  translate([$insideHeight + $outsetMargin, 0, 0])
-  rotate([0, 180, 0])
-  standLid();
-  translate([$insideHeight + $outsetMargin, 0, 1.5 * (2 * $height_gap + 3 * $material_thickness)])
-  rotate([0, 180, 0])
-  otherLid();
+  translate([$insetLength + $outsetMargin, 0, 0])
+  lid();
+  translate([$insetLength + $outsetMargin, 0, 0])
+    rotate([0, 180, 0])
+    standLid();
+  translate([$insetLength + $outsetMargin, 0, 1.5 * (2 * $heightGap + 3 * $materialThickness)])
+    rotate([0, 180, 0])
+    otherLid();
 }
