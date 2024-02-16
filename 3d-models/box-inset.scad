@@ -3,11 +3,11 @@ use <./harmonica-body.scad>
 
 margin = 5;
 
-insideWidth = $horizontalPlacements * $thickGap + ($horizontalPlacements - 1) * $materialThickness;
+insideWidth = $boxWidth - 2* $materialThickness;
 
 
 function offsetCalculator(level) = 
-  $materialThickness + ($verticalPlacements - level) *($heightGap + $materialThickness) / tan (90-$slantAngle) + 2;
+  $insetMargin + $materialThickness + ($verticalPlacements - level) *($heightGap + $materialThickness) / tan (90-$slantAngle) + 2;
 
 echo("offset #1-> ", offsetCalculator(0));
 echo("offset #2-> ", offsetCalculator(1));
@@ -59,19 +59,19 @@ module horizontalPlank(height, level = 1) {
 module verticalSeparator(height, is_even = true) {
   offset = offsetCalculator(1);
   offsetted_height = height - offset;
-  separator_witdh = $heightGap + ($verticalPlacements - 1) * ($materialThickness + $heightGap);
+  separator_width = $heightGap + ($verticalPlacements - 1) * ($materialThickness + $heightGap);
 
-  base = 4 + margin;
-  bottomOffset = base + (separator_witdh + 2 * margin) / tan(90-$slantAngle);
+  base = 4 + margin + $insetMargin;
+  bottomOffset = base + (separator_width + 2 * margin) / tan(90-$slantAngle);
 
   // wedge cutout
   wedgePoints = [
-    [0, 0, separator_witdh + 2 * margin], // 0
-    [base, 0, separator_witdh + 2 * margin], // 1
+    [0, 0, separator_width + 2 * margin], // 0
+    [base, 0, separator_width + 2 * margin], // 1
     [bottomOffset, 0, 0], // 2
     [0, 0, 0], // 3
-    [0, $materialThickness + 2 * margin, separator_witdh + 2 * margin], // 4
-    [base, $materialThickness + 2 * margin, separator_witdh + 2 * margin], // 5
+    [0, $materialThickness + 2 * margin, separator_width + 2 * margin], // 4
+    [base, $materialThickness + 2 * margin, separator_width + 2 * margin], // 5
     [bottomOffset, $materialThickness + 2 * margin, 0], // 6
     [0, $materialThickness + 2 * margin, 0] // 7
   ];
@@ -86,9 +86,9 @@ module verticalSeparator(height, is_even = true) {
 
   difference() {
     union() {
-      cube([height, $materialThickness, separator_witdh]);
+      cube([height, $materialThickness, separator_width]);
       translate([2 * height / 3 - 5, 0, - $materialThickness])
-        cube([10, $materialThickness, separator_witdh + 2 * $materialThickness]);
+        cube([10, $materialThickness, separator_width + 2 * $materialThickness]);
     }
     translate([-margin, -margin, -margin])
       polyhedron(wedgePoints, wedgeFaces);

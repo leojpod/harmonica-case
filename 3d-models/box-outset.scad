@@ -26,8 +26,9 @@ include <./dimensions.scad>
 use <./box-inset.scad>
 use <./utils/crenel.scad>
 
-width = $horizontalPlacements * $thickGap + ($horizontalPlacements + 1) * $materialThickness;
-depth = $materialThickness + $verticalPlacements * ($materialThickness + $heightGap);
+width = $boxWidth;
+depth = $boxDepth;
+height = $boxHeight;
 
 margin = 2;
 
@@ -59,7 +60,7 @@ module bottom() {
   }
 }
 
-module long_side(height) {
+module long_side() {
   difference() {
     cube([height, width, $materialThickness]);
     //long-side <-> short side
@@ -76,7 +77,7 @@ module long_side(height) {
   }
 }
 
-module short_side(height) {
+module short_side() {
   difference() {
     cube([height, $materialThickness, depth]);
     // short-side <-> long-side
@@ -98,25 +99,24 @@ module short_side(height) {
   }
 }
 
-module boxOutset(insetLength = $insetLength, outsetMargin = $outsetMargin, extraSpace = 0) {
-  height = insetLength + outsetMargin;
+module boxOutset(extraSpace = 0) {
 
   color("red")
   bottom();
 
   color("green")
   translate([0,0, - extraSpace])
-  long_side(height);
+  long_side();
   color("blue")
   translate([0,0, depth - $materialThickness + extraSpace])
-  long_side(height);
+  long_side();
 
   color("violet")
   translate([0, - extraSpace, 0])
-  short_side(height);
+  short_side();
   color("yellow")
   translate([0,width - $materialThickness + extraSpace,0])
-  short_side(height);
+  short_side();
 }
 
 

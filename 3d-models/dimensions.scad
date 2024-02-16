@@ -29,8 +29,8 @@ $materialThickness = 4;
  * - not too far so that they are easy to pick up
  * - have a good difference between the different rows so you can see them all nicely
 */
-$minHarpSeating = 65;
-$maxHarpSeating = 95;
+$minHarpSeating = 55;
+$maxHarpSeating = 85;
 
 // the difference between the harp seatings dictates how slanted should the inside slant be.
 deltaSeating = $maxHarpSeating - $minHarpSeating;
@@ -63,9 +63,17 @@ echo("slant angle -> ", $slantAngle);
 // how far should the inset goes?
 insetHeight = $heightGap + ($heightGap + $materialThickness) * ($verticalPlacements - 1);
 slantDeltaLength = insetHeight * deltaSeating / deltaHeight;
-$insetLength = $minHarpSeating + slantDeltaLength + $materialThickness;
+$insetMargin = 10;
+$insetLength = $minHarpSeating + slantDeltaLength + $materialThickness + $insetMargin;
 echo("insetLength -> ", $insetLength);
 // how much futher should the outset cover?
 $outsetMargin = 5;
 
+// Box dimensions: 
+$boxWidth = $horizontalPlacements * ($thickGap + $materialThickness) + $materialThickness;
+$boxHeight = $insetLength + $outsetMargin;
+$boxDepth = $verticalPlacements * ($heightGap + $materialThickness) + $materialThickness;
 
+// the angle at which the box should sit when the lid is opened
+// !TODO adjust the angle if you want a flat part on the top of the standing lid
+$boxTiltingAngle = 35;

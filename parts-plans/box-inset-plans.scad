@@ -4,23 +4,26 @@ include <./../3d-models/dimensions.scad>
 use <./../3d-models/box-inset.scad>
 
 margin = 5;
-insideWidth = $horizontalPlacements * $thick_gap + ($horizontalPlacements - 1) * $material_thickness;
+insideWidth = $horizontalPlacements * $thickGap + ($horizontalPlacements - 1) * $materialThickness;
 echo("insideWidth: ", insideWidth);
 
 // Outside box
 
 module insideBoxLayout() {
-  horizontalPlank($insideHeight);
+  for(level=[1:$verticalPlacements-1]) {
+    translate([- (level - 1) * $insetLength, 0, 0])
+    horizontalPlank($insetLength, level);
+  }
 
-  translate([-10, - 2 * $material_thickness - margin, 0])
+  translate([-15, - 2 * $materialThickness - margin, 0])
   rotate([90, 0, 0])
-  verticalSeparator($insideHeight);
+  verticalSeparator($insetLength);
 
-  translate([-10, - (2 * $height_gap + 5 * $material_thickness) - 2 * margin, 0])
+  translate([-15, - ($verticalPlacements * $heightGap + ($verticalPlacements + 2) * $materialThickness) - 2 * margin, 0])
   rotate([90, 0, 0])
-  verticalSeparator($insideHeight, false);
+  verticalSeparator($insetLength, false);
 
-  translate([$insideHeight, 0, $material_thickness])
+  translate([$insetLength + $materialThickness, 0, $materialThickness])
   rotate([0, 90, 0])
   insideSlant();
 }
