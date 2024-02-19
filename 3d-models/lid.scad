@@ -15,17 +15,17 @@ use <./utils/crenel.scad>
  *   lid-radius     flat length
  * <-------><------------------------------------->
  *         , - ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ - ,                      ^ ^
- *     , '   |                             /       | ' ,                  | |
+ *     , '   |                  |          /       | ' ,                  | |
  *   ,                                    /              ,                | | lid-radius
- *  ,        |                           /         |      ,               | |
+ *  ,        |                  |        /         |      ,               | |
  * ,             other wedge            /                  ,              | |
- * ,         |                         /           |       ,              | V
+ * ,         |                  |      /           |       ,              | V
  * |                                  /                    | ^            |
- * |         |                       /   stand     |       | |            |
+ * |         |                  |    /   stand     |       | |            |
  * |                                /    wedge             | | height     | lidHeight
- * |         |                     /               |       | | clearance  |
- * |                              /                        | |            |
- * |_________|___________________/_________________|_______| V            V
+ * |         |                  |  /               |       | | clearance  |
+ * |                             α/                        | |            |
+ * |_________|__________________|/_________________|_______| V            V
  * <------------------------------------><--------------->
  *           otherLid top                     standLid top
  * <----------------------------><------------------------->
@@ -70,25 +70,33 @@ module rawLid() {
 // translate([1.5 * lidHeight, 0, 0])
   // rawLid();
 
-module stabiliser() {
-  w = round(width * 0.05);
-  translate([0, $materialThickness, 0])
+module stabiliser( closed = false ) {
   difference() {
-    union() {
-      cube([10 + $materialThickness, width - 2 * $materialThickness, $materialThickness]);
+    cube([(closed? 4 : 3)* $materialThickness, $boxWidth, $materialThickness]);
+    translate([$materialThickness, -margin, -margin])
+    cube([(closed? 2 : 3)*$materialThickness, margin + $materialThickness, $materialThickness + 2*margin]);
+    translate([$materialThickness, $boxWidth - $materialThickness, -margin])
+    cube([(closed? 2 : 3)*$materialThickness, margin + $materialThickness, $materialThickness + 2*margin]);
 
-      translate([0, -$materialThickness, 0])
-        cube([5, width, $materialThickness]);
 
+    crenelReps = 10;
+    crenelWidth = ($boxWidth - 2*$materialThickness) / (2*crenelReps);
+    translate([3*$materialThickness, $materialThickness + crenelWidth / 2, 0])
+    rotate([0,0,90])
+    if (closed) {
+      hole_crenel(crenelReps, crenelWidth);
+    } else {
+      crenel(crenelReps, crenelWidth);
     }
 
-
-    translate([10 + $materialThickness, 0, 0])
-      rotate([0, 0, 90])
-      crenel(11, w);
+    if(!closed) {
+      translate([2*$materialThickness,0,-5])
+      cube(10+$materialThickness);
+      translate([2*$materialThickness,$boxWidth - $materialThickness - 10,-5])
+      cube(10+$materialThickness);
+    }
   }
 }
-!stabiliser();
 
 standWedgePoints = [
   [0, 0, 0], // 0
@@ -135,6 +143,9 @@ module standSide() {
 
     translate([lidHeight - $materialThickness, -$materialThickness, 0])
       cube([2*$materialThickness, 3* $materialThickness, 2 *standLidTop]);
+
+    translate([lidHeight - 3*$materialThickness, -margin, standLidTop - $materialThickness])
+      cube([$materialThickness, $materialThickness + 2*margin, $materialThickness]);
   }
 }
 
@@ -144,7 +155,7 @@ module standCover() {
       cube([heightClearance, $boxWidth, $materialThickness]);
       if(standLidTop > lidRadius) {
         translate([lidHeight - $materialThickness, 0, lidRadius])
-          #cube([$materialThickness, $boxWidth, standLidTop - lidRadius]);
+          cube([$materialThickness, $boxWidth, standLidTop - lidRadius]);
       }
 
       translate([heightClearance, 0, lidRadius])
@@ -164,6 +175,22 @@ module standCover() {
     translate([0, $boxWidth, $materialThickness])
       rotate([180, 0, 0])
       crenel(6, heightClearance / 12);
+
+    crenelWidth = ($boxWidth - 2*$materialThickness) / 20;
+    translate([lidHeight, 2*crenelWidth, standLidTop])
+      rotate([0, -90, 0])
+      rotate([0, 0, 90])
+      crenel(9, crenelWidth);
+
+    translate([lidHeight, $materialThickness, standLidTop])
+      rotate([0, -90, 0])
+      rotate([0, 0, 90])
+      crenel(1, crenelWidth/2);
+
+    translate([lidHeight, $materialThickness + 19.5* crenelWidth, standLidTop])
+      rotate([0, -90, 0])
+      rotate([0, 0, 90])
+      crenel(1, crenelWidth/2);
   }
 }
 
@@ -176,11 +203,14 @@ module standLid(spread = false) {
   color("blue")
   translate([0, spread? 5 : 0, 0])
     standCover();
+  color("green") 
+  translate([lidHeight - 3* $materialThickness, (spread? 5: 0), standLidTop - $materialThickness + (spread? 10 : 0)])
+    stabiliser(true);
 }
 // translate([0, $boxWidth, $boxDepth + 0*margin ])
 // rotate([180, 0, 0])
 // color("blue")
- !standLid();
+// standLid(true);
 
 otherWedgePoints = [
   [0, 0, 0], // 0
@@ -195,45 +225,105 @@ otherWedgePoints = [
 otherWedgeFaces = standWedgeFaces;
 
 module otherStandSide() {
-  cube([heightClearance, $materialThickness, lidRadius]);
-  translate([heightClearance, 0, lidRadius])
-    difference() {
-      rotate([-90, 0, 0])
-        cylinder($materialThickness, r = lidRadius - $materialThickness, center = false);
-      translate([-lidRadius, -5, 0])
-        cube([2 * lidRadius, 10 + $materialThickness, 2* lidRadius]);
-      translate([-2*lidRadius,-5,-lidRadius])
-        cube([2 * lidRadius,10 + $materialThickness, 2* lidRadius]);
-    }
-  translate([0, 0, lidRadius])
-    polyhedron(otherWedgePoints, otherWedgeFaces);
-}
-
-module otherCover() {
-  cube([heightClearance, $boxWidth, $materialThickness]);
-  translate([lidHeight - $materialThickness, 0, lidRadius])
-    cube([$materialThickness, $boxWidth, otherLidTop - lidRadius]);
-
-  translate([heightClearance, 0, lidRadius])
-  rotate([-90, 0, 0])
   difference() {
-    cylinder($boxWidth, r = lidRadius, center = false);
-    translate([0, 0, -margin])
-      cylinder($boxWidth + 2*margin, r = lidRadius - $materialThickness, center = false);
-    translate([-$boxWidth, -$boxWidth, -$boxWidth/2])
-      cube([2 * $boxWidth, $boxWidth, 2* $boxWidth]);
-    translate([-$boxWidth,-$boxWidth,-$boxWidth/2])
-      cube([$boxWidth, 2* $boxWidth, 2* $boxWidth]);
+    union() {
+      cube([heightClearance, $materialThickness, lidRadius]);
+      translate([heightClearance, 0, lidRadius])
+        difference() {
+          rotate([-90, 0, 0])
+            cylinder($materialThickness, r = lidRadius - $materialThickness, center = false);
+          translate([-lidRadius, -5, 0])
+            cube([2 * lidRadius, 10 + $materialThickness, 2* lidRadius]);
+          translate([-2*lidRadius,-5,-lidRadius])
+            cube([2 * lidRadius,10 + $materialThickness, 2* lidRadius]);
+        }
+      translate([0, 0, lidRadius])
+        polyhedron(otherWedgePoints, otherWedgeFaces);
+    }
+    translate([lidHeight - 3* $materialThickness, -margin, lidRadius + 2 * $materialThickness])
+      cube([$materialThickness, $materialThickness + 2*margin, $materialThickness]);
+    triangleTop = otherLidTop - otherLidBase;
+    triangleStab = triangleTop * (lidHeight - 3*$materialThickness) / lidHeight;
+    stabOffset = otherLidBase + triangleStab - 2*$materialThickness;
+    translate([lidHeight - 3* $materialThickness, -margin, stabOffset])
+      cube([$materialThickness, $materialThickness + 2*margin, $materialThickness]);
+    translate([heightClearance / 12, $materialThickness, 0])
+      rotate([90, 0, 0])
+      crenel(6, heightClearance / 12);
+    translate([heightClearance * 11/12,-5, -10])
+      cube(10 + $materialThickness);
+    translate([lidHeight, 1*$materialThickness, lidRadius + (otherLidTop - lidRadius)/12])
+    rotate([90, -90, 0])
+    crenel(6, (otherLidTop - lidRadius)/12);
   }
 }
 
-module otherLid() {
-  otherStandSide();
-  translate([0, $boxWidth - $materialThickness, 0])
-  otherStandSide();
-  otherCover();
+module otherCover() {
+  difference () {
+    union () {
+      cube([heightClearance, $boxWidth, $materialThickness]);
+      translate([lidHeight - $materialThickness, 0, lidRadius])
+        cube([$materialThickness, $boxWidth, otherLidTop - lidRadius]);
+
+      translate([heightClearance, 0, lidRadius])
+      rotate([-90, 0, 0])
+      difference() {
+        cylinder($boxWidth, r = lidRadius, center = false);
+        translate([0, 0, -margin])
+          cylinder($boxWidth + 2*margin, r = lidRadius - $materialThickness, center = false);
+        translate([-$boxWidth, -$boxWidth, -$boxWidth/2])
+          cube([2 * $boxWidth, $boxWidth, 2* $boxWidth]);
+        translate([-$boxWidth,-$boxWidth,-$boxWidth/2])
+          cube([$boxWidth, 2* $boxWidth, 2* $boxWidth]);
+      }
+    }
+    translate([0, 0, 0])
+      crenel(6, heightClearance / 12);
+    translate([0, $boxWidth, $materialThickness])
+      rotate([180, 0, 0])
+      crenel(6, heightClearance / 12);
+    translate([lidHeight,0,lidRadius])
+      rotate([0,-90,0])
+      crenel(6, (otherLidTop - lidRadius) / 12);
+    translate([lidHeight-$materialThickness,$boxWidth,lidRadius])
+      rotate([180,-90,0])
+      crenel(6, (otherLidTop - lidRadius) / 12);
+    crenelReps = 10;
+    crenelWidth = ($boxWidth - 2*$materialThickness) / (2*crenelReps);
+    triangleTop = otherLidTop - otherLidBase;
+    triangleStab = triangleTop * (lidHeight - 3*$materialThickness) / lidHeight;
+    stabOffset = otherLidBase + triangleStab - 2*$materialThickness;
+    translate([lidHeight - $materialThickness, 2*crenelWidth,lidRadius + 2 * $materialThickness])
+      rotate([90,0,90])
+      #hole_crenel(crenelReps - 1, crenelWidth);
+    translate([lidHeight - $materialThickness, 2*crenelWidth,stabOffset])
+      rotate([90,0,90])
+      #hole_crenel(crenelReps -1, crenelWidth);
+  }
 }
-//otherLid();
+
+module otherLid(spread = false) {
+  color("white")
+    otherStandSide();
+  color("white")
+  translate([0, $boxWidth - $materialThickness + (spread? 10 : 0), 0])
+    otherStandSide();
+  color("blue")
+  translate([0, (spread? 5: 0), 0])
+    otherCover();
+
+  color("green")
+  translate([lidHeight - 3* $materialThickness - (spread? 10 : 0), spread? 5: 0, lidRadius + 2 * $materialThickness]) 
+    stabiliser(false);
+
+  triangleTop = otherLidTop - otherLidBase;
+  triangleStab = triangleTop * (lidHeight - 3*$materialThickness) / lidHeight;
+  stabOffset = otherLidBase + triangleStab - 2*$materialThickness;
+  color("green")
+  translate([lidHeight - 3* $materialThickness - (spread? 10 : 0), spread? 5: 0, stabOffset]) 
+    stabiliser(false);
+}
+!otherLid(true);
 
 lidDepth = ($heightGap * $verticalPlacements + $materialThickness * ($verticalPlacements + 1)) / 2;
 echo("lidDepth -> ", lidDepth);
@@ -380,7 +470,7 @@ module standLid_() {
 
   color("green")
   translate([flatHeight + circularRadius - $materialThickness - 10, 0, circularRadius - $materialThickness])
-    stabiliser();
+    stabiliser(true);
 }
 
 
@@ -502,11 +592,11 @@ module otherRoundedSideFlatten() {
 
 module lid(spread = false) {
   color("blue")
-    standLid();
+    standLid(spread);
 
-  translate([0, $boxWidth, $boxDepth + (spread? 25: 0)])
+  translate([0, $boxWidth + (spread? 10: 0), $boxDepth + (spread? 25: 0)])
     rotate([180, 0, 0])
-    otherLid();
+    otherLid(spread);
 }
 
 
