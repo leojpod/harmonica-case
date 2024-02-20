@@ -1,6 +1,7 @@
 /*
  * This file regroup all the common dimensions, angles, and repetitions
  */
+$margin = 2;
 
 // how many harmonica do you want to store on a given row?
 $horizontalPlacements = 5;
@@ -76,4 +77,9 @@ $boxDepth = $verticalPlacements * ($heightGap + $materialThickness) + $materialT
 
 // the angle at which the box should sit when the lid is opened
 // !TODO adjust the angle if you want a flat part on the top of the standing lid
-$boxTiltingAngle = 35;
+$boxTiltingAngle = 0;
+
+// lid stuff
+$lidRadius = $heightGap * 2/3;
+$lidHeightClearance = $lengthGap - $minHarpSeating + $margin;
+$lidHeight = $lidRadius + $lidHeightClearance;

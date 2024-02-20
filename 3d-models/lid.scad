@@ -36,9 +36,10 @@ use <./utils/crenel.scad>
 
 margin = 2;
 
-lidRadius = $heightGap * 2/3;
-heightClearance =  $lengthGap - $minHarpSeating + margin;
-lidHeight = lidRadius + heightClearance;
+lidRadius = $lidRadius;
+heightClearance = $lidHeightClearance;
+
+lidHeight = $lidHeight;
 flatLenght = $boxDepth - 2 * lidRadius;
 
 

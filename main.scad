@@ -28,6 +28,7 @@ use <./3d-models/harmonica-body.scad>
 use <./3d-models/box-inset.scad>
 use <./3d-models/box-outset.scad>
 use <./3d-models/lid.scad>
+use <./3d-models/lid-lock.scad>
 
 rotate([0, -($boxTiltingAngle), 0]) {
   translate([$materialThickness,$materialThickness,$materialThickness]) {
@@ -48,14 +49,22 @@ rotate([0, -($boxTiltingAngle), 0]) {
   }
 
   boxOutset(extraSpace = 0);
-  translate([$insetLength + $outsetMargin, 0, 0])
+  translate([$boxHeight, 0, 0])
   lid();
-  translate([$insetLength + $outsetMargin, 0, 0])
+  translate([$boxHeight, 0, 0])
     rotate([0, 180, 0])
     standLid();
-  translate([$insetLength + $outsetMargin, 0, 1.5 * (2 * $heightGap + 3 * $materialThickness)])
+  translate([$boxHeight, 0, $boxDepth])
     rotate([0, 180, 0])
     translate([0, $boxWidth, 0])
     rotate([180, 0, 0])
     otherLid();
+
+  translate([$boxHeight + $lidHeight/ 2, $boxWidth, $boxDepth - $lidRadius])
+    mirror([0,1,])
+    rotate([90, 180, 0])
+    swingLock(length = 70);
+  translate([$boxHeight + $lidHeight/ 2, 0, $boxDepth - $lidRadius])
+    rotate([90, 180, 0])
+    swingLock(length = 70);
 }
