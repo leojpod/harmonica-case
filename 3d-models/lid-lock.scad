@@ -106,9 +106,9 @@ module oblongShape(r= 2*$materialThickness, height = $materialThickness, flatLen
 module oblongPivot() {
   difference() {
     oblongShape(flatLenght = 2*$materialThickness);
-    translate([0, -1.5*$materialThickness, -$materialThickness])
+    translate([0.5*$materialThickness, -1.5*$materialThickness, -$materialThickness])
       cube([$materialThickness, 3*$materialThickness, 3*$materialThickness]);
-    translate([-1.5*$materialThickness, -.5*$materialThickness, -$materialThickness])
+    translate([-1.0*$materialThickness, -.5*$materialThickness, -$materialThickness])
       cube([4*$materialThickness, $materialThickness, 3*$materialThickness]);
 
   }
@@ -121,9 +121,9 @@ module insertD() {
 module oblongPivotAssembly(spread = false) {
   translate([0,0,$materialThickness + (spread? (-2*$materialThickness -2 * margin) : 0)])
     oblongPivot();
-  translate([0*$materialThickness, -1.5*$materialThickness, spread? (3*$materialThickness + 2*margin) : 0])
+  translate([0.5*$materialThickness, -1.5*$materialThickness, spread? (3*$materialThickness + 2*margin) : 0])
     insertD();
-  translate([-1.5*$materialThickness, -.5*$materialThickness, 0])
+  translate([-1.0*$materialThickness, -.5*$materialThickness, 0])
   insertC();
 }
 

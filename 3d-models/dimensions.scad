@@ -71,9 +71,9 @@ echo("insetLength -> ", $insetLength);
 $outsetMargin = 5;
 
 // Box dimensions: 
-$boxWidth = $horizontalPlacements * ($thickGap + $materialThickness) + $materialThickness;
+$boxWidth = $horizontalPlacements * ($thickGap + $materialThickness) + $materialThickness*3;
 $boxHeight = $insetLength + $outsetMargin;
-$boxDepth = $verticalPlacements * ($heightGap + $materialThickness) + $materialThickness;
+$boxDepth = $verticalPlacements * ($heightGap + $materialThickness) + $materialThickness*3;
 
 // the angle at which the box should sit when the lid is opened
 // !TODO adjust the angle if you want a flat part on the top of the standing lid
