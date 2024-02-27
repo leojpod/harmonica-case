@@ -24,6 +24,7 @@
  */
 include <./dimensions.scad>
 use <./box-inset.scad>
+use <./lid-lock.scad>
 use <./utils/crenel.scad>
 
 width = $boxWidth - 2*$materialThickness;
@@ -173,6 +174,11 @@ module short_side_b() {
     translate([0, 0, 10 + $materialThickness ])
     rotate([-90,-90, 0])
       crenel(6, (depth / 12));
+
+    //placements for the lock
+    translate([$boxHeight + $lidHeight*.80, -.1, $boxDepth - 1.5*$lidRadius])
+      rotate([90, 180, 0])
+    slideLock();
   }
 }
 

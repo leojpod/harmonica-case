@@ -3,15 +3,12 @@ use <./harmonica-body.scad>
 
 margin = 5;
 
-insideWidth = $boxWidth - 2* $materialThickness;
+insideWidth = $boxWidth - 4* $materialThickness;
 
 
 function offsetCalculator(level) = 
   $insetMargin + $materialThickness + ($verticalPlacements - level) *($heightGap + $materialThickness) / tan (90-$slantAngle) + 2;
 
-echo("offset #1-> ", offsetCalculator(0));
-echo("offset #2-> ", offsetCalculator(1));
-echo("offset #3-> ", offsetCalculator(2));
 
 module insideSlant() {
   // inside-slant offset ->

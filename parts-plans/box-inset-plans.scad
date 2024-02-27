@@ -9,25 +9,33 @@ echo("insideWidth: ", insideWidth);
 
 // Outside box
 
-module insideBoxLayout() {
-  for(level=[1:$verticalPlacements-1]) {
-    translate([- (level - 1) * $insetLength, 0, 0])
-    horizontalPlank($insetLength, level);
+module insideBoxLayout(piece = "all") {
+  if (piece == "all" || piece == "horizontalPlank") {
+    for(level=[1:$verticalPlacements-1]) {
+      translate([- (level - 1) * $insetLength, 0, 0])
+      horizontalPlank($insetLength, level);
+    }
+  }
+  
+  if(piece == "all" || piece == "verticalSeparator") {
+    translate([-15, - 2 * $materialThickness - margin, 0])
+    rotate([90, 0, 0])
+    verticalSeparator($insetLength);
   }
 
-  translate([-15, - 2 * $materialThickness - margin, 0])
-  rotate([90, 0, 0])
-  verticalSeparator($insetLength);
+  if(piece == "all" || piece == "verticalSeparator_odd"){
+    translate([-15, - ($verticalPlacements * $heightGap + ($verticalPlacements + 2) * $materialThickness) - 2 * margin, 0])
+    rotate([90, 0, 0])
+    verticalSeparator($insetLength, false);
+  }
 
-  translate([-15, - ($verticalPlacements * $heightGap + ($verticalPlacements + 2) * $materialThickness) - 2 * margin, 0])
-  rotate([90, 0, 0])
-  verticalSeparator($insetLength, false);
-
-  translate([$insetLength + $materialThickness, 0, $materialThickness])
-  rotate([0, 90, 0])
-  insideSlant();
+  if(piece == "all" || piece == "insideSlant") {
+    translate([$insetLength + $materialThickness, 0, $materialThickness])
+    rotate([0, 90, 0])
+    insideSlant();
+  }
 }
 
 projection(cut = true) {
-  insideBoxLayout();
+  insideBoxLayout("insideSlant");
 }

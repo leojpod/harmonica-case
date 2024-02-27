@@ -25,30 +25,38 @@ Don't hesitate to comment out part of the `BoxOutset` to see inside more easily.
 
 The whole thing is meant to be assembled from laser cut parts.
 
-### The laser cut pieces:
+### 3 by 5 box
+
+#### laser-cut pieces
+
+All the pieces are cut on some 4 mm thick laminated wood.
 
 - For the inset:
-
-  - 1 horizontal plank
-  - 1 slant plank (to make sure the lower row of harmonicas sticks out more than the top row)
-  - 2 sorts of vertical separators:
-    - how many depends on how many harmonicas you want to have on a given row
-    - For the default version: 2 vertical separators with front notch, and 2 with back notch
-
+  - [ ] 1 horizontal plank
+  - [ ] 1 slant plank
+  - [ ] 2 even vertical separators
+  - [ ] 2 odd vertical separators
 - For the outset:
-
-  - 2 long sides (you might want to customize the outside facing part of this),
-  - 2 short sides
-  - 1 bottom
-
-- For the lid (the lid is in 2 parts: the stand part -- that support the box when it's open, and the "other" -- that is folder over the top of the box when it's open ):
-  - "stand" parts:
-    - 2 short sides
-    - 1 stabiliser
-    - 1 long cork side
-  - "other" parts:
-    - 2 short sides
-    - 1 long cork side
+  - [ ] 1 bottom
+  - [ ] 2 long side "a"
+  - [ ] 2 long side "b"
+  - [ ] 2 short side "a"
+  - [ ] 2 short side "b"
+- For the lid-lock:
+  - [ ] 1 example support (optional to check the lock works)
+  - [ ] 10 holders
+  - [ ] 4 handles
+  - [ ] 2 long slider base
+  - [ ] 2 short slider base
+- For the lid:
+  - [ ] the "stand lid part"
+    - [ ] 2 stand side
+    - [ ] 1 "stand" cover
+    - [ ] 1 stabiliser with overhead
+  - [ ] the "other lid part"
+    - [ ] 2 "other" side
+    - [ ] 2 stabilisers without overhead
+    - [ ] 1 "other" cover
 
 ### Other pieces & material
 

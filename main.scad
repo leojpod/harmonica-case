@@ -31,7 +31,7 @@ use <./3d-models/lid.scad>
 use <./3d-models/lid-lock.scad>
 
 rotate([0, -($boxTiltingAngle), 0]) {
-  translate([$materialThickness,$materialThickness,$materialThickness]) {
+  translate([$materialThickness,2*$materialThickness,2*$materialThickness]) {
     boxInset();
     // harmonicas as example
     color("white") {
@@ -60,11 +60,11 @@ rotate([0, -($boxTiltingAngle), 0]) {
     rotate([180, 0, 0])
     otherLid();
 
-  translate([$boxHeight + $lidHeight/ 2, $boxWidth, $boxDepth - $lidRadius])
+  translate([$boxHeight + $lidHeight*.80, $boxWidth, $boxDepth - 1.5*$lidRadius])
     mirror([0,1,])
     rotate([90, 180, 0])
-    swingLock(length = 70);
-  translate([$boxHeight + $lidHeight/ 2, 0, $boxDepth - $lidRadius])
+    slideLock();
+  translate([$boxHeight + $lidHeight*.80, 0, $boxDepth - 1.5*$lidRadius])
     rotate([90, 180, 0])
-    swingLock(length = 70);
+    slideLock();
 }
