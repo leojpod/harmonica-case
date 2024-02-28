@@ -16,7 +16,7 @@ module insideBoxLayout(piece = "all") {
       horizontalPlank($insetLength, level);
     }
   }
-  
+
   if(piece == "all" || piece == "verticalSeparator") {
     translate([-15, - 2 * $materialThickness - margin, 0])
     rotate([90, 0, 0])
@@ -37,5 +37,5 @@ module insideBoxLayout(piece = "all") {
 }
 
 projection(cut = true) {
-  insideBoxLayout("insideSlant");
+  insideBoxLayout("verticalSeparator_odd");
 }

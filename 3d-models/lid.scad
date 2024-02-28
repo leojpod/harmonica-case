@@ -364,6 +364,16 @@ module standCoverFlatten() {
       translate([$materialThickness + 19.5*crenelWidth, 0,0])
         crenel(1, crenelWidth/2);
       }
+
+    translate([5, 0, -margin]) {
+      for(i=[0:2:$horizontalPlacements - 1]) {
+        translate([0,2*$materialThickness+margin + (($thickGap - 2*margin - 14 )/ 2)+ i*($thickGap + $materialThickness), 0]) {
+          cylinder_outer(2*margin+$materialThickness, 1.5, fn=25);
+          translate([0,14,0])
+            cylinder_outer(2*margin+$materialThickness, 1.5, fn=25);
+        }
+      }
+    }
   }
 }
 
@@ -406,6 +416,15 @@ module otherCoverFlatten() {
     translate([heightClearance + flattenLength + stabOffset - lidRadius + $materialThickness, 2*crenelWidth,0])
       rotate([00,0,90])
       hole_crenel(crenelReps -1, crenelWidth);
+    translate([5, 0, -margin]) {
+      for(i=[0:2:$horizontalPlacements - 1]) {
+        translate([0,2*$materialThickness+margin + (($thickGap - 2*margin - 14 )/ 2)+ i*($thickGap + $materialThickness), 0]) {
+          cylinder_outer(2*margin+$materialThickness, 1.5, fn=25);
+          translate([0,14,0])
+            cylinder_outer(2*margin+$materialThickness, 1.5, fn=25);
+        }
+      }
+    }
 
   }
 }
@@ -583,7 +602,7 @@ module otherRoundedSideFlatten() {
 
   translate([0, 0, -lidDepth + $materialThickness])
   union() {
-    difference() {
+    #difference() {
       translate([0, 0, lidDepth - $materialThickness])
         cube([flatHeight + flattenLength, width, $materialThickness]);
 

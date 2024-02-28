@@ -57,7 +57,7 @@ module shortSliderBaseLayout() {
 }
 
 projection(cut = true) {
-  //holderLayout();
+  holderLayout();
   //handleLayout();
   //longSliderBaseLayout();
   //shortSliderBaseLayout();

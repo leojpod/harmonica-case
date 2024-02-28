@@ -204,6 +204,9 @@ module longSlide(opened = false, spread = false){
   translate([80, -2*$materialThickness, -$materialThickness + (spread? 20: 0)])
     rotate([0,-90,0])
     holder();
+  translate([100, -2*$materialThickness, -$materialThickness + (spread? 20: 0)])
+    rotate([0,-90,0])
+    holder();
 }
 
 module shortSliderBase(handlePlacement) {

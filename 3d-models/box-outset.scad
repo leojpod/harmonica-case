@@ -128,6 +128,15 @@ module long_side_b() {
     translate([margin, $materialThickness + width/ 12, 0])
     rotate([0, 0, 90])
       crenel(6, width / 12);
+    translate([$boxHeight - 5, 0, -margin]) {
+      for(i=[0:2:$horizontalPlacements - 1]) {
+        translate([0,2*$materialThickness+margin + (($thickGap - 2*margin - 14 )/ 2)+ i*($thickGap + $materialThickness), 0]) {
+          cylinder_outer(2*margin+$materialThickness, 1.5, fn=25);
+          translate([0,14,0])
+            cylinder_outer(2*margin+$materialThickness, 1.5, fn=25);
+        }
+      }
+    }
   }
 }
 
@@ -223,4 +232,4 @@ module boxOutset(extraSpace = 0) {
 }
 
 
-boxOutset(extraSpace = 20);
+boxOutset(extraSpace = 0);

@@ -38,5 +38,5 @@ module outsideBoxLayout(piece) {
 }
 
 projection(cut = true) {
-  outsideBoxLayout("all");
+  outsideBoxLayout("long_side_b");
 }

@@ -16,9 +16,9 @@ $verticalPlacements = 3;
  *  |_____________|/ <- thick_gap
  *       ^ length_gap
  */
-$thickGap = 25;
+$thickGap = 24;
 //$height_gap = 30; <- this one was a bit tight for Seydels and too tight for the old golden melody
-$heightGap = 35; // <- I'll increase that somewhat so I can also install some felt inside the box.
+$heightGap = 33; // <- I'll increase that somewhat so I can also install some felt inside the box.
 $lengthGap = 105;
 
 // base material thickness, this represent the thickness of the most commonly used material.
@@ -42,19 +42,20 @@ echo("slant angle -> ", $slantAngle);
 
 /*
  * inset looks like: 
- *
+ *   _ <--- insetMargin
+ *  / \
  * =================================== <- outset border
- * |\
- * | \ <-     maxHarpSeating     ->
- * |  \----------------------------
- * |   \
  * |    \
- * |     \-------------------------      <- vertical separator
- * |      \
+ * |     \ <-     maxHarpSeating     ->
+ * |      \----------------------------
  * |       \
- * |        \----------------------
- * | slant ->\
- * |          \<- minHarpSeating ->
+ * |        \
+ * |         \-------------------------      <- vertical separator
+ * |          \
+ * |           \
+ * |            \----------------------
+ * |     slant ->\
+ * |              \<- minHarpSeating ->
  * ===================================
  *                                 \_/ 
  *                                  ^outsetMargin
@@ -64,7 +65,7 @@ echo("slant angle -> ", $slantAngle);
 // how far should the inset goes?
 insetHeight = $heightGap + ($heightGap + $materialThickness) * ($verticalPlacements - 1);
 slantDeltaLength = insetHeight * deltaSeating / deltaHeight;
-$insetMargin = 10;
+$insetMargin = 8;
 $insetLength = $minHarpSeating + slantDeltaLength + $materialThickness + $insetMargin;
 echo("insetLength -> ", $insetLength);
 // how much futher should the outset cover?
